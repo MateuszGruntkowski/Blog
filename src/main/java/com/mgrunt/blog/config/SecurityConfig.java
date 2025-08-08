@@ -2,7 +2,6 @@ package com.mgrunt.blog.config;
 
 import com.mgrunt.blog.domain.entities.User;
 import com.mgrunt.blog.repositories.UserRepository;
-import com.mgrunt.blog.security.BlogUserDetails;
 import com.mgrunt.blog.security.BlogUserDetailsService;
 import com.mgrunt.blog.security.JwtAuthenticationFilter;
 import com.mgrunt.blog.services.AuthenticationService;

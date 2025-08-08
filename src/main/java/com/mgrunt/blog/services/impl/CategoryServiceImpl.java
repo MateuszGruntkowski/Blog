@@ -3,6 +3,7 @@ package com.mgrunt.blog.services.impl;
 import com.mgrunt.blog.domain.entities.Category;
 import com.mgrunt.blog.repositories.CategoryRepository;
 import com.mgrunt.blog.services.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,5 +41,12 @@ public class CategoryServiceImpl implements CategoryService {
             }
             categoryRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public Category getCategoryById(UUID id) {
+        return categoryRepository.findById(id).orElseThrow(() ->
+            new EntityNotFoundException("Category with id '" + id + "' not found.")
+        );
     }
 }

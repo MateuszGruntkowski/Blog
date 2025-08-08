@@ -3,6 +3,7 @@ package com.mgrunt.blog.services.impl;
 import com.mgrunt.blog.domain.entities.Tag;
 import com.mgrunt.blog.repositories.TagRepository;
 import com.mgrunt.blog.services.TagService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,7 @@ public class TagServiceImpl implements TagService {
                 .toList();
 
         List<Tag> savedTags = new ArrayList<>();
-        if(newTags.isEmpty()) {
+        if(!newTags.isEmpty()) {
             savedTags = tagRepository.saveAll(newTags);
         }
 
@@ -55,5 +56,12 @@ public class TagServiceImpl implements TagService {
             }
             tagRepository.deleteById(id);
         });
+    }
+
+    @Override
+    public Tag getTagById(UUID id) {
+        return tagRepository.findById(id).orElseThrow(() ->
+            new EntityNotFoundException("Tag with id '" + id + "' not found.")
+        );
     }
 }

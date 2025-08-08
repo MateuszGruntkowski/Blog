@@ -1,5 +1,8 @@
 package com.mgrunt.blog.services.impl;
 
+import com.mgrunt.blog.domain.entities.User;
+import com.mgrunt.blog.repositories.UserRepository;
+import com.mgrunt.blog.security.BlogUserDetails;
 import com.mgrunt.blog.services.AuthenticationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -11,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -24,8 +28,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Value("{jwt.secret}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     private final Long jwtExpiryMs = 86400000L; // 24 hours
@@ -34,6 +40,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public UserDetails authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         return userDetailsService.loadUserByUsername(email);
+    }
+
+    @Override
+    public UserDetails register(String email, String password, String name) {
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("User with email " + email + " already exists");
+        }
+
+        User user = User.builder()
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .name(name)
+                .build();
+
+        User savedUser = userRepository.save(user);
+
+        return new BlogUserDetails(savedUser);
     }
 
     @Override

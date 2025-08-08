@@ -1,10 +1,15 @@
 package com.mgrunt.blog.controllers;
 
+import com.mgrunt.blog.domain.CreatePostRequest;
+import com.mgrunt.blog.domain.dtos.CreatePostRequestDto;
 import com.mgrunt.blog.domain.dtos.PostDto;
 import com.mgrunt.blog.domain.entities.Post;
+import com.mgrunt.blog.domain.entities.User;
 import com.mgrunt.blog.mappers.PostMapper;
 import com.mgrunt.blog.services.PostService;
+import com.mgrunt.blog.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +23,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts(
@@ -32,6 +38,25 @@ public class PostController {
 
     @GetMapping(path="/drafts")
     public ResponseEntity<List<PostDto>> getDrafts(@RequestAttribute UUID userId){
-
+        User loggedInUser = userService.getUserById(userId);
+        List<Post> draftPosts = postService.getDraftPosts(loggedInUser);
+        List<PostDto> draftPostDtos = draftPosts.stream()
+                .map(postMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(draftPostDtos);
     }
+
+    @PostMapping
+    public ResponseEntity<PostDto> createPost(
+            @RequestBody CreatePostRequestDto createPostRequestDto,
+            @RequestAttribute UUID userId) {
+        User loggedInUser = userService.getUserById(userId);
+        CreatePostRequest createPostRequest = postMapper.toCreatePostRequest(createPostRequestDto);
+
+        Post createdPost = postService.createPost(loggedInUser, createPostRequest);
+        PostDto createdPostDto = postMapper.toDto(createdPost);
+        return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
+    }
+
+
 }

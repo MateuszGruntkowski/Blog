@@ -34,6 +34,9 @@ public class User {
     @OneToMany(mappedBy="author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy ="author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

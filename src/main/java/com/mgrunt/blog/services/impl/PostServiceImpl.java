@@ -13,6 +13,7 @@ import com.mgrunt.blog.services.PostService;
 import com.mgrunt.blog.services.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,9 +89,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Post updatePost(UUID id, UpdatePostRequest updatePostRequest) {
+    public Post updatePost(User loggedInUser, UUID id, UpdatePostRequest updatePostRequest) {
         Post existingPost = postRepository.findById(id).orElseThrow(() ->
             new EntityNotFoundException("Post with id '" + id + "' not found."));
+
+        if (!existingPost.getAuthor().getId().equals(loggedInUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to edit this post");
+        }
 
         existingPost.setTitle(updatePostRequest.getTitle());
         existingPost.setContent(updatePostRequest.getContent());

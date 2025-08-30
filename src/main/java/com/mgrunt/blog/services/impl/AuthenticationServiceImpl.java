@@ -1,5 +1,6 @@
 package com.mgrunt.blog.services.impl;
 
+import com.mgrunt.blog.domain.Role;
 import com.mgrunt.blog.domain.entities.User;
 import com.mgrunt.blog.repositories.UserRepository;
 import com.mgrunt.blog.security.BlogUserDetails;
@@ -52,6 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .name(name)
+                .role(Role.USER)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -62,6 +64,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .get()
+                .getAuthority();
+
+        claims.put("role", role);
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())

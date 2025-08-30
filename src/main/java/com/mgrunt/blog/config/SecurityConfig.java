@@ -1,5 +1,6 @@
 package com.mgrunt.blog.config;
 
+import com.mgrunt.blog.domain.Role;
 import com.mgrunt.blog.domain.entities.User;
 import com.mgrunt.blog.repositories.UserRepository;
 import com.mgrunt.blog.security.BlogUserDetailsService;
@@ -38,6 +39,7 @@ public class SecurityConfig {
                             .name("Test User")
                             .email(email)
                             .password(passwordEncoder().encode("password"))
+                            .role(Role.ADMIN)
                             .build();
 
                     return userRepository.save(newUser);
@@ -53,7 +55,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST,"/api/v1/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET,"/api/v1/categories/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/v1/categories/**").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.GET,"/api/v1/posts/drafts").authenticated()
                     .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/api/v1/tags/**").permitAll()

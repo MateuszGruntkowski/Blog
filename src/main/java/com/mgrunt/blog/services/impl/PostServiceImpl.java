@@ -45,26 +45,26 @@ public class PostServiceImpl implements PostService {
         if(categoryId != null && tagId != null){
             Category category = categoryService.getCategoryById(categoryId);
             Tag tag = tagService.getTagById(tagId);
-            return postRepository.findAllByStatusAndCategoryAndTagsContaining(PostStatus.PUBLISHED, category, tag);
+            return postRepository.findAllByStatusAndCategoryAndTagsContainingOrderByCreatedAtDesc(PostStatus.PUBLISHED, category, tag);
         }
 
         if(categoryId != null) {
             Category category = categoryService.getCategoryById(categoryId);
-            return postRepository.findAllByStatusAndCategory(PostStatus.PUBLISHED, category);
+            return postRepository.findAllByStatusAndCategoryOrderByCreatedAtDesc(PostStatus.PUBLISHED, category);
         }
 
         if(tagId != null) {
             Tag tag = tagService.getTagById(tagId);
-            return postRepository.findAllByStatusAndTagsContaining(PostStatus.PUBLISHED, tag);
+            return postRepository.findAllByStatusAndTagsContainingOrderByCreatedAtDesc(PostStatus.PUBLISHED, tag);
         }
 
-        return postRepository.findAllByStatus(PostStatus.PUBLISHED);
+        return postRepository.findAllByStatusOrderByCreatedAtDesc(PostStatus.PUBLISHED);
 
     }
 
     @Override
     public List<Post> getDraftPosts(User user) {
-        return postRepository.findAllByAuthorAndStatus(user, PostStatus.DRAFT);
+        return postRepository.findAllByAuthorAndStatusOrderByCreatedAtDesc(user, PostStatus.DRAFT);
     }
 
     @Override

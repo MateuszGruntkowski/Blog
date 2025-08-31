@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateCommentRequest {
     @NotBlank(message = "Content is required")
-    @Size(min = 10, max = 1000, message = "content must be between {min} and {max} characters")
+    @Size(min = 2, max = 1000, message = "content must be between {min} and {max} characters")
     private String content;
 }

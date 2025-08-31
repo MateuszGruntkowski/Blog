@@ -2,6 +2,7 @@ package com.mgrunt.blog.services.impl;
 
 import com.mgrunt.blog.domain.Role;
 import com.mgrunt.blog.domain.entities.User;
+import com.mgrunt.blog.exceptions.EmailAlreadyExistsException;
 import com.mgrunt.blog.repositories.UserRepository;
 import com.mgrunt.blog.security.BlogUserDetails;
 import com.mgrunt.blog.security.BlogUserDetailsService;
@@ -13,6 +14,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public BlogUserDetails register(String email, String password, String name) {
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("User with email " + email + " already exists");
+            throw new EmailAlreadyExistsException("User with email " + email + " already exists");
         }
 
         User user = User.builder()

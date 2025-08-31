@@ -5,6 +5,7 @@ import com.mgrunt.blog.domain.dtos.LoginRequest;
 import com.mgrunt.blog.domain.dtos.RegisterRequest;
 import com.mgrunt.blog.security.BlogUserDetails;
 import com.mgrunt.blog.services.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         BlogUserDetails userDetails = authenticationService.register(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),

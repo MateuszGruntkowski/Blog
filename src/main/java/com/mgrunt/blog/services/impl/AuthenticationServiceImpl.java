@@ -4,6 +4,7 @@ import com.mgrunt.blog.domain.Role;
 import com.mgrunt.blog.domain.entities.User;
 import com.mgrunt.blog.repositories.UserRepository;
 import com.mgrunt.blog.security.BlogUserDetails;
+import com.mgrunt.blog.security.BlogUserDetailsService;
 import com.mgrunt.blog.services.AuthenticationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,13 +23,14 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final BlogUserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -38,13 +40,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final Long jwtExpiryMs = 86400000L; // 24 hours
 
     @Override
-    public UserDetails authenticate(String email, String password) {
+    public BlogUserDetails authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         return userDetailsService.loadUserByUsername(email);
     }
 
     @Override
-    public UserDetails register(String email, String password, String name) {
+    public BlogUserDetails register(String email, String password, String name) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("User with email " + email + " already exists");
         }
@@ -62,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(BlogUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
         String role = userDetails.getAuthorities().stream()
@@ -71,6 +73,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .getAuthority();
 
         claims.put("role", role);
+
+        UUID userId = userDetails.getId();
+        claims.put("userId", userId);
 
         return Jwts.builder()
                 .setClaims(claims)

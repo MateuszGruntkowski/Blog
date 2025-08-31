@@ -83,8 +83,18 @@ public class PostController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletePost(
-            @PathVariable UUID id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+            @PathVariable UUID id,
+            @RequestAttribute UUID userId) {
+
+        Post post = postService.getPost(id);
+        User loggedInUser = userService.getUserById(userId);
+
+        if(loggedInUser.getRole().name().equals("ADMIN") || post.getAuthor().getId().equals(userId)){
+            postService.deletePost(id);
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
     }
 }

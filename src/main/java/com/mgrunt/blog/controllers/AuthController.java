@@ -3,6 +3,7 @@ package com.mgrunt.blog.controllers;
 import com.mgrunt.blog.domain.dtos.AuthResponse;
 import com.mgrunt.blog.domain.dtos.LoginRequest;
 import com.mgrunt.blog.domain.dtos.RegisterRequest;
+import com.mgrunt.blog.security.BlogUserDetails;
 import com.mgrunt.blog.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
-        UserDetails userDetails = authenticationService.authenticate(
+        BlogUserDetails userDetails = authenticationService.authenticate(
                 loginRequest.getEmail(),
                 loginRequest.getPassword());
         String tokenValue = authenticationService.generateToken(userDetails);
@@ -35,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
-        UserDetails userDetails = authenticationService.register(
+        BlogUserDetails userDetails = authenticationService.register(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 registerRequest.getName()

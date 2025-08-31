@@ -49,4 +49,20 @@ public class CommentController {
         return new ResponseEntity<>(createdCommentDto, HttpStatus.CREATED);
 
     }
+
+    @DeleteMapping(path = "/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable UUID commentId,
+            @RequestAttribute UUID userId) throws Exception {
+
+        Comment comment = commentService.getComment(commentId);
+        User loggedInUser = userService.getUserById(userId);
+
+        if(loggedInUser.getRole().name().equals("ADMIN") || comment.getAuthor().getId().equals(userId)){
+            commentService.deleteComment(commentId);
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }

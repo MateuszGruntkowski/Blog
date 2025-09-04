@@ -32,11 +32,23 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts(
             @RequestParam(required = false) UUID categoryId,
-            @RequestParam(required = false) UUID tagId){
+            @RequestParam(required = false) UUID tagId,
+            @RequestAttribute(required = false) UUID userId){
         List<Post> posts = postService.getAllPosts(categoryId, tagId);
-        List<PostDto> postDtos = posts.stream()
-                .map(postMapper::toDto)
-                .toList();
+
+        List<PostDto> postDtos;
+        if (userId != null) {
+            // if user is logged in -> add user's context
+            postDtos = posts.stream()
+                    .map(post -> postService.addUserContext(post, userId))
+                    .toList();
+        } else {
+            // For non-logged-in users -> return posts data without user context
+            postDtos = posts.stream()
+                    .map(postMapper::toDto)
+                    .toList();
+        }
+
         return ResponseEntity.ok(postDtos);
     }
 

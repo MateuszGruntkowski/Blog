@@ -146,7 +146,6 @@ public class PostServiceImpl implements PostService {
 
     public PostDto addUserContext(Post post, UUID userId) {
         PostDto dto = postMapper.toDto(post);
-        dto.setLikesCount(post.getLikes().size());
         dto.setIsLikedByCurrentUser(
                 post.getLikes().stream()
                         .anyMatch(user -> user.getId().equals(userId))

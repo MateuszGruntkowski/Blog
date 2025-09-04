@@ -3,14 +3,17 @@ package com.mgrunt.blog.services.impl;
 import com.mgrunt.blog.domain.CreatePostRequest;
 import com.mgrunt.blog.domain.PostStatus;
 import com.mgrunt.blog.domain.UpdatePostRequest;
+import com.mgrunt.blog.domain.dtos.PostDto;
 import com.mgrunt.blog.domain.entities.Category;
 import com.mgrunt.blog.domain.entities.Post;
 import com.mgrunt.blog.domain.entities.Tag;
 import com.mgrunt.blog.domain.entities.User;
+import com.mgrunt.blog.mappers.PostMapper;
 import com.mgrunt.blog.repositories.PostRepository;
 import com.mgrunt.blog.services.CategoryService;
 import com.mgrunt.blog.services.PostService;
 import com.mgrunt.blog.services.TagService;
+import com.mgrunt.blog.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,6 +33,8 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CategoryService categoryService;
     private final TagService tagService;
+    private final UserService userService;
+    private final PostMapper postMapper;
 
     private static final int WORDS_PER_MINUTE = 200;
 
@@ -122,6 +127,31 @@ public class PostServiceImpl implements PostService {
     public void deletePost(UUID id) {
         Post post = getPost(id);
         postRepository.delete(post);
+    }
+
+    @Override
+    public Post toggleLike(UUID postId, UUID userId) {
+        Post post = this.getPost(postId);
+
+        User user = userService.getUserById(userId);
+
+        if (post.getLikes().contains(user)) {
+            post.getLikes().remove(user);
+        } else {
+            post.getLikes().add(user);
+        }
+
+        return postRepository.save(post);
+    }
+
+    public PostDto addUserContext(Post post, UUID userId) {
+        PostDto dto = postMapper.toDto(post);
+        dto.setLikesCount(post.getLikes().size());
+        dto.setIsLikedByCurrentUser(
+                post.getLikes().stream()
+                        .anyMatch(user -> user.getId().equals(userId))
+        );
+        return dto;
     }
 
     private Integer calculateReadingTime(String content) {

@@ -22,6 +22,8 @@ public class PostDto {
     private CategoryDto category;
     private Set<TagDto> tags;
     private Integer readingTime;
+    private Integer likesCount;
+    private Boolean isLikedByCurrentUser;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private PostStatus status;

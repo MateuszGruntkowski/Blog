@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -75,10 +76,21 @@ public class PostController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<PostDto> getPost(
-            @PathVariable UUID id) {
+            @PathVariable UUID id,
+            @RequestAttribute(required = false) UUID userId) {
         Post post = postService.getPost(id);
-        PostDto postDto = postMapper.toDto(post);
-        return ResponseEntity.ok(postDto);
+
+        // if user is logged in -> add user's context
+        if (userId != null) {
+            PostDto postDto = postService.addUserContext(post, userId);
+            return ResponseEntity.ok(postDto);
+        } else {
+            // For non-logged-in users -> return basic post data
+            PostDto postDto = postMapper.toDto(post);
+            postDto.setLikesCount(post.getLikes().size());
+            postDto.setIsLikedByCurrentUser(false);
+            return ResponseEntity.ok(postDto);
+        }
     }
 
     @DeleteMapping(path = "/{id}")
@@ -95,6 +107,15 @@ public class PostController {
         }else{
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
 
+    @PostMapping(path = "/{id}/like")
+    public ResponseEntity<PostDto> likePost(
+            @PathVariable UUID id,
+            @RequestAttribute UUID userId
+    ){
+        Post likedPost = postService.toggleLike(id, userId);
+        PostDto dto = postService.addUserContext(likedPost, userId);
+        return ResponseEntity.ok(dto);
     }
 }

@@ -2,6 +2,7 @@ package com.mgrunt.blog.services;
 
 import com.mgrunt.blog.domain.CreatePostRequest;
 import com.mgrunt.blog.domain.UpdatePostRequest;
+import com.mgrunt.blog.domain.dtos.PostDto;
 import com.mgrunt.blog.domain.entities.Post;
 import com.mgrunt.blog.domain.entities.User;
 
@@ -15,4 +16,6 @@ public interface PostService {
     Post createPost(User user, CreatePostRequest createPostRequest);
     Post updatePost(User loggedInUser, UUID id, UpdatePostRequest updatePostRequest);
     void deletePost(UUID id);
+    Post toggleLike(UUID postId, UUID userId);
+    PostDto addUserContext(Post post, UUID userId);
 }

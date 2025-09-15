@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,5 +37,7 @@ public class CreatePostRequestDto {
 
     @NotNull(message = "Status is required")
     private PostStatus status;
+
+    private MultipartFile image;
 
 }

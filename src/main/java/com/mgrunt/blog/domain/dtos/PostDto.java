@@ -23,6 +23,8 @@ public class PostDto {
     private Set<TagDto> tags;
     private Integer readingTime;
     private Integer likesCount;
+    private Integer commentsCount;
+    private PostImageDto image;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private PostStatus status;

@@ -6,17 +6,23 @@ import com.mgrunt.blog.domain.dtos.CreatePostRequestDto;
 import com.mgrunt.blog.domain.dtos.PostDto;
 import com.mgrunt.blog.domain.dtos.UpdatePostRequestDto;
 import com.mgrunt.blog.domain.entities.Post;
+import com.mgrunt.blog.domain.entities.PostImage;
 import com.mgrunt.blog.domain.entities.User;
 import com.mgrunt.blog.mappers.PostMapper;
+import com.mgrunt.blog.services.PostImageService;
 import com.mgrunt.blog.services.PostService;
 import com.mgrunt.blog.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +32,7 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+    private final PostImageService postImageService;
     private final PostMapper postMapper;
     private final UserService userService;
 
@@ -62,10 +69,25 @@ public class PostController {
         return ResponseEntity.ok(draftPostDtos);
     }
 
-    @PostMapping
+    @GetMapping("/images/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable UUID id) {
+        PostImage image = postImageService.getImageById(id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + image.getFileName() + "\"")
+                .body(image.getImageData());
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDto> createPost(
-            @Valid @RequestBody CreatePostRequestDto createPostRequestDto,
+            @Valid @RequestPart("post") CreatePostRequestDto createPostRequestDto,
+            @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestAttribute UUID userId) {
+
+        createPostRequestDto.setImage(image);
+
         User loggedInUser = userService.getUserById(userId);
         CreatePostRequest createPostRequest = postMapper.toCreatePostRequest(createPostRequestDto);
 
@@ -74,13 +96,18 @@ public class PostController {
         return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDto> updatePost(
             @PathVariable UUID id,
-            @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto,
-            @RequestAttribute UUID userId) {
+            @Valid @RequestPart("post") UpdatePostRequestDto updatePostRequestDto,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestAttribute UUID userId){
+
+        updatePostRequestDto.setImage(image);
+
         User loggedInUser = userService.getUserById(userId);
         UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
+
         Post updatedPost = postService.updatePost(loggedInUser, id, updatePostRequest);
         PostDto updatedPostDto = postMapper.toDto(updatedPost);
         return ResponseEntity.ok(updatedPostDto);

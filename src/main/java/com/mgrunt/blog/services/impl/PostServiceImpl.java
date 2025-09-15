@@ -4,16 +4,10 @@ import com.mgrunt.blog.domain.CreatePostRequest;
 import com.mgrunt.blog.domain.PostStatus;
 import com.mgrunt.blog.domain.UpdatePostRequest;
 import com.mgrunt.blog.domain.dtos.PostDto;
-import com.mgrunt.blog.domain.entities.Category;
-import com.mgrunt.blog.domain.entities.Post;
-import com.mgrunt.blog.domain.entities.Tag;
-import com.mgrunt.blog.domain.entities.User;
+import com.mgrunt.blog.domain.entities.*;
 import com.mgrunt.blog.mappers.PostMapper;
 import com.mgrunt.blog.repositories.PostRepository;
-import com.mgrunt.blog.services.CategoryService;
-import com.mgrunt.blog.services.PostService;
-import com.mgrunt.blog.services.TagService;
-import com.mgrunt.blog.services.UserService;
+import com.mgrunt.blog.services.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,6 +28,7 @@ public class PostServiceImpl implements PostService {
     private final CategoryService categoryService;
     private final TagService tagService;
     private final UserService userService;
+    private final PostImageService postImageService;
     private final PostMapper postMapper;
 
     private static final int WORDS_PER_MINUTE = 200;
@@ -89,6 +84,11 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagService.getTagByIds(tagIds);
         newPost.setTags(new HashSet<>(tags));
 
+        if (createPostRequest.getImage() != null && !createPostRequest.getImage().isEmpty()) {
+            PostImage postImage = postImageService.createImage(createPostRequest.getImage());
+            newPost.setImage(postImage);
+        }
+
         return postRepository.save(newPost);
     }
 
@@ -119,6 +119,15 @@ public class PostServiceImpl implements PostService {
             List<Tag> newTags = tagService.getTagByIds(updatePostRequestTagIds);
             existingPost.setTags(new HashSet<>(newTags));
         }
+
+        if (updatePostRequest.getImage() != null && !updatePostRequest.getImage().isEmpty()) {
+            PostImage updatedImage = postImageService.updateImageIfChanged(
+                    existingPost.getImage(),
+                    updatePostRequest.getImage()
+            );
+            existingPost.setImage(updatedImage);
+        }
+
 
         return postRepository.save(existingPost);
     }

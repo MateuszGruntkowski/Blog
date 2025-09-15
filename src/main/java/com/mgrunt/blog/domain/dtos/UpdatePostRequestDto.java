@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class UpdatePostRequestDto {
     @Size(min = 10, max = 50000, message = "Content must be between {min} and {max} characters")
     private String content;
 
-    @NotNull(message = "CategoryId is required")
+    @NotNull(message = "Category is required")
     private UUID categoryId;
 
     @Builder.Default
@@ -40,4 +41,5 @@ public class UpdatePostRequestDto {
     @NotNull(message = "Status is required")
     private PostStatus status;
 
+    private MultipartFile image;
 }

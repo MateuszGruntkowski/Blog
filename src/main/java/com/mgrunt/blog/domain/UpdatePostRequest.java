@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,4 +24,5 @@ public class UpdatePostRequest {
     private Set<UUID> tagIds = new HashSet<>();
 
     private PostStatus status;
+    private MultipartFile image;
 }

@@ -60,6 +60,10 @@ public class Post {
     )
     private Set<User> likes = new HashSet<>();
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private PostImage image;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

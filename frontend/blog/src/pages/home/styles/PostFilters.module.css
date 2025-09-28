@@ -1,0 +1,114 @@
+/* PostFilters.module.css - Minimalist Style */
+
+.filtersContainer {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  position: sticky;
+  top: 2rem;
+  z-index: 10;
+}
+
+.filtersContainer:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.filtersHeader h3 {
+  margin: 0 0 1.5rem 0;
+  color: #374151;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterSection {
+  margin-bottom: 1.25rem;
+}
+
+.filterSection:last-child {
+  margin-bottom: 0;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.filterBtn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: #6b7280;
+  min-width: 60px;
+  text-align: center;
+}
+
+.filterBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.filterBtn.active {
+  background: #4074e6;
+  color: white;
+  border-color: #4074e6;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(64, 116, 230, 0.25);
+}
+
+.filterBtn.active:hover {
+  background: #3662d4;
+  border-color: #3662d4;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .filtersHeader h3 {
+    font-size: 1.1rem;
+  }
+
+  .filterBtn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .filtersContainer {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .filtersHeader h3 {
+    font-size: 1.1rem;
+  }
+
+  .filterButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .filterBtn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 60px;
+    text-align: center;
+    width: auto;
+    border-radius: 20px;
+  }
+}

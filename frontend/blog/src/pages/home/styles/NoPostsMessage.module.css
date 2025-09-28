@@ -1,0 +1,44 @@
+/* NoPostsMessage.module.css */
+
+.noPostsContainer {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6c757d;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.noPostsText {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #495057;
+}
+
+.noPostsSubtext {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .noPostsContainer {
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+  }
+
+  .noPostsText {
+    font-size: 1rem;
+  }
+
+  .noPostsSubtext {
+    font-size: 0.85rem;
+  }
+}

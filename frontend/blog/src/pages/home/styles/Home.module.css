@@ -1,0 +1,53 @@
+/* Home.module.css */
+
+.homeContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  min-height: 100vh;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 2rem;
+}
+
+.contentArea {
+  flex: 1;
+  max-width: 680px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .homeContainer {
+    max-width: 100%;
+    gap: 1.5rem;
+  }
+
+  .sidebar {
+    width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .homeContainer {
+    flex-direction: column;
+    padding: 1rem 0;
+    gap: 1rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: relative;
+    top: auto;
+  }
+
+  .contentArea {
+    max-width: 100%;
+  }
+}

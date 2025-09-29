@@ -1,0 +1,96 @@
+.content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.imageContainer {
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #f8f9fa;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.postImage {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  display: block;
+}
+
+.imageError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #6c757d;
+  background: #f8f9fa;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.postText {
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.postText p {
+  margin-bottom: 1.5rem;
+}
+
+.postText h1,
+.postText h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.postText code {
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 0.9em;
+}
+
+.postText pre {
+  background: #2c3e50;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.postText pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    font-size: 1rem;
+  }
+  .imageContainer {
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .postImage {
+    max-height: 300px;
+  }
+
+  .imageError {
+    height: 200px;
+  }
+}

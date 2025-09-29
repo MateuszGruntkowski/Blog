@@ -1,0 +1,73 @@
+.commentsSection {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.commentsSection:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.commentsTitle {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loginPrompt {
+  background: rgba(149, 165, 166, 0.1);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  border: 1px solid rgba(149, 165, 166, 0.2);
+  transition: all 0.3s ease;
+}
+
+.loginPrompt:hover {
+  background: rgba(149, 165, 166, 0.15);
+  transform: translateY(-1px);
+}
+
+.loginPrompt p {
+  color: #6c757d;
+  margin: 0;
+  font-weight: 500;
+}
+
+.loginPrompt a {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.loginPrompt a:hover {
+  color: #764ba2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .commentsSection {
+    padding: 1.5rem;
+  }
+
+  .commentsTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .commentsSection {
+    padding: 1rem;
+  }
+}

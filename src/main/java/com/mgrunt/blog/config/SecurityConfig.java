@@ -65,6 +65,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/v1/tags/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/tags/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/tags/**").hasAuthority("ADMIN")
+                        .requestMatchers("/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

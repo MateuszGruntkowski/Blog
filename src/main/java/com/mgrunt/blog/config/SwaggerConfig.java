@@ -17,7 +17,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Mateusz API")
+                        .title("Blog API")
                         .version("1.0")
                         .description("Dokumentacja API ze wsparciem JWT"))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
